@@ -11,7 +11,7 @@ I got something new today at the class.
 - array_shift()
 - etc
 
-the static varity means that the varity will be declared **once** !
+The static varity means that the varity will be declared **once** !
 
 Also,I find when I use foreach to traverse an array,it may throw a notice said undefined offset,though the truth isn't like the notice.
 I use > error_reporting('Notice'); to cover it.
