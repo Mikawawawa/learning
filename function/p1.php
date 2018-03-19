@@ -1,8 +1,9 @@
 <?php
-    function reverse($param){ack=$param;
-
+    function reverse($param){
         $deepth=1;
-        $backp        while($param/10>=1){
+        $backpack=$param;
+
+        while($param/10>=1){
             $param=$param/10;
             $deepth++;
         }
@@ -12,7 +13,12 @@
             array_push($bit,$backpack%10);
             $backpack=$backpack/10;
         }
+        $reverse=0;
         print_r($bit);
+        for($i=$deepth;$i>=0;$i--){
+            $reverse+=$bit[$i]*pow(10,$deepth-$i-1);
+        }
+        echo $reverse;
     }
-    reverse(100)
+    reverse(102)
 ?>
