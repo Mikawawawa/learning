@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PICKER</title>
+</head>
+
+<body>
+    <select name="province" id="province" onchange="getCity()"> </select>
+    <select name="city" id="city" onchange="getArea()"></select>
+    <select name="area" id="area"></select>
+</body>
+
+<script>
+    function request(method, url, data = {
+        cmd: '/'
+    }) {
+        var request = new XMLHttpRequest();
+        return new Promise((resolve, reject) => {
+            request.onreadystatechange = () => {
+                if (request.readyState === 4) {
+                    if (request.status === 200) {
+                        resolve(request.responseText);
+                    } else {
+                        reject(request.status);
+                    }
+                }
+            };
+            request.open(method, url);
+            request.send(JSON.stringify(data));
+        });
+    }
+
+    function option(value) {
+        console.log('run')
+        return `<option value="${value}">${value}</option>`
+    }
+
+    function getProvince() {
+        let fetch = request('POST', './region.php')
+        fetch.then((data) => {
+            data = JSON.parse(data)
+            data = data.map(option)
+            console.log(data)
+
+            document.getElementById('province').innerHTML = data.join("")
+            return
+        }).then(() => {
+            getCity()
+            return
+        }).then(() => {
+            getArea()
+        })
+        fetch.catch((err) => {
+            console.log(err)
+        })
+    }
+
+    function getCity() {
+        let province = document.getElementById("province").value
+        let fetch = request('POST', './region.php', {
+            cmd: `/${province}`
+        })
+        fetch.then((data) => {
+            data = JSON.parse(data)
+            data = data.map(option)
+            console.log(data)
+
+            document.getElementById('city').innerHTML = data.join("")
+        }).then(() => {
+            getArea()
+        })
+    }
+
+    function getArea() {
+        let province = document.getElementById("province").value
+        let city = document.getElementById("city").value
+        let fetch = request('POST', './region.php', {
+            cmd: `/${province}/${city}`
+        })
+        fetch.then((data) => {
+            data = JSON.parse(data)
+            data = data.map(option)
+            console.log(data)
+
+            document.getElementById('area').innerHTML = data.join("")
+        })
+    }
+
+
+    window.onload = getProvince()
+</script>
+
+</html>
